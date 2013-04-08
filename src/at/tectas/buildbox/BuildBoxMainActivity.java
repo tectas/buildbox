@@ -31,7 +31,7 @@ import at.tectas.buildbox.library.content.items.Item;
 import at.tectas.buildbox.library.download.DownloadActivity;
 import at.tectas.buildbox.library.helpers.PropertyHelper;
 import at.tectas.buildbox.library.service.DownloadService;
-import at.tectas.buildbox.R;
+import at.tectas.buildbox.msteam.R;
 
 @SuppressLint("DefaultLocale")
 public class BuildBoxMainActivity extends DownloadActivity {
@@ -139,7 +139,7 @@ public class BuildBoxMainActivity extends DownloadActivity {
 		else {
 			menu.getItem(3).setVisible(true);
 		}
-		
+
 		if (this.bar.getTabCount() == 0 || !this.bar.getTabAt(this.adapter.getViewPagerIndex()).getText().equals("Downloads")) {
 			menu.getItem(0).setVisible(false);
 			menu.getItem(1).setVisible(false);

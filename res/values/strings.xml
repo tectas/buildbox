@@ -1,5 +1,7 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <resources>
-
-    <string name="app_name">BuildBox</string>
-
+    <string name="app_name">MS Team HD BuildBox</string>
+    <string name="default_rom_url">http://ms-team-hd.tectas.eu/buildbox/Rom.json</string>
+    <string name="default_content_url">http://ms-team-hd.tectas.eu/buildbox/Content.json</string>
+    <string name="splashscreen_label">BuildBox\n by MS Team HD \n\nset your device free\n\n\nLoading content...</string>
 </resources>
