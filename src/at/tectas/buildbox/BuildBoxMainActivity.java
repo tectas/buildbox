@@ -15,12 +15,13 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
+import android.util.Log;
 import android.view.Menu;
 import android.view.animation.Animation;
 import android.widget.ImageView;
 import at.tectas.buildbox.adapters.TabsAdapter;
 import at.tectas.buildbox.communication.callbacks.BuildBoxDownloadCallback;
-import at.tectas.buildbox.communication.callbacks.BuildBoxMapDeserializedProcessCallback;
+import at.tectas.buildbox.communication.callbacks.BuildBoxDeserializeMapFinishedCallback;
 import at.tectas.buildbox.library.fragments.ContentListFragment;
 import at.tectas.buildbox.library.fragments.DetailFragment;
 import at.tectas.buildbox.library.fragments.DownloadListFragment;
@@ -129,9 +130,7 @@ public class BuildBoxMainActivity extends DownloadActivity {
 
 	@Override
 	public boolean onPrepareOptionsMenu(Menu menu) {
-		if (this.backupList == null) {
-			this.fillBackupList();
-		}
+		this.fillBackupList();
 		
 		if (this.backupList.size() == 0) {
 			menu.getItem(3).setVisible(false);
@@ -184,7 +183,7 @@ public class BuildBoxMainActivity extends DownloadActivity {
 					this.getDownloads().clear();
 					
 					this.downloadMapRestored = true;
-					this.loadDownloadsMapFromCacheFile(new BuildBoxMapDeserializedProcessCallback(this));
+					this.loadDownloadsMapFromCacheFile(new BuildBoxDeserializeMapFinishedCallback(this));
 				}
   				return;
    		}

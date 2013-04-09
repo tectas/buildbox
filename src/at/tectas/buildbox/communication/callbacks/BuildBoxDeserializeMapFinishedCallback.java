@@ -1,16 +1,16 @@
 package at.tectas.buildbox.communication.callbacks;
 
 import at.tectas.buildbox.BuildBoxMainActivity;
-import at.tectas.buildbox.library.communication.callbacks.MapDeserializedProcessCallback;
+import at.tectas.buildbox.library.communication.callbacks.DeserializeMapFinishedCallback;
 import at.tectas.buildbox.library.download.DownloadActivity;
 
-public class BuildBoxMapDeserializedProcessCallback extends MapDeserializedProcessCallback {
+public class BuildBoxDeserializeMapFinishedCallback extends DeserializeMapFinishedCallback {
 
-	private BuildBoxMapDeserializedProcessCallback(DownloadActivity activity) {
+	private BuildBoxDeserializeMapFinishedCallback(DownloadActivity activity) {
 		super(activity);
 	}
 	
-	public BuildBoxMapDeserializedProcessCallback(BuildBoxMainActivity activity) {
+	public BuildBoxDeserializeMapFinishedCallback(BuildBoxMainActivity activity) {
 		super(activity);
 	}
 	
