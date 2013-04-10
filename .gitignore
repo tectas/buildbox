@@ -5,3 +5,8 @@ bin/library
 bin/res
 bin/AndroidManifest.xml
 gen
+bin/dexedLibs
+bin/res
+bin/classes
+bin/jarlist.cache
+bin/R.txt
