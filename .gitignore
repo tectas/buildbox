@@ -4,4 +4,7 @@ bin/gen
 bin/library
 bin/res
 bin/AndroidManifest.xml
+bin/classes
+bin/jarlist.cache
+bin/R.txt
 gen
