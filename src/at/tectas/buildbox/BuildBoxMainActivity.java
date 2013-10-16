@@ -43,7 +43,7 @@ public class BuildBoxMainActivity extends DownloadActivity {
 	public ActionBar bar = null;
 	protected TabsAdapter adapter = null;
 	protected DetailItem romItem = null;
-	protected ItemList contentItems = null;
+	protected ItemList contentItems = new ItemList();
 	protected HashSet<String> contentUrls = new HashSet<String>();
 	protected Hashtable<String, Bitmap> remoteDrawables = new Hashtable<String, Bitmap>();
 	protected DownloadBaseCallback downloadCallback = null;
@@ -309,7 +309,7 @@ public class BuildBoxMainActivity extends DownloadActivity {
 	
 	@Override
 	public void refreshDownloadsView() {
-		if ((this.getDownloads().size() > 0 && !this.bar.getTabAt(this.bar.getTabCount() - 1).getText().equals("Downloads")) || this.bar.getTabCount() == 0) {
+		if (this.bar.getTabCount() == 0 || (this.getDownloads().size() > 0 && !this.bar.getTabAt(this.bar.getTabCount() - 1).getText().equals("Downloads"))) {
 			this.addTab("Downloads", DownloadListFragment.class, new Bundle());
 		}
 
