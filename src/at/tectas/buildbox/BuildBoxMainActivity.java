@@ -278,6 +278,8 @@ public class BuildBoxMainActivity extends DownloadActivity {
 		}
 		
 		this.removeSplashscreen();
+		
+		this.processChangeList();
 	}
 
 	@Override
