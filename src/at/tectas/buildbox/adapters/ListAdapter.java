@@ -17,14 +17,12 @@ import at.tectas.buildbox.R;
 
 public class ListAdapter extends ArrayAdapter<String> implements
 		ViewPager.OnPageChangeListener {
-	private static final String TAG = "TabsAdapter";
 	private final BuildBoxMainActivity mContext;
 	private final ActionBar mActionBar;
 	protected SherlockFragment currentFragment = null;
 	protected int listItemIndex = 0;
 	private final BuildBoxListListener mListener = new BuildBoxListListener();
-	public ArrayList<ListItemInfo> infos = new ArrayList<ListItemInfo>();
-	protected ArrayList<ArrayList<SherlockFragment>> backStack = new ArrayList<ArrayList<SherlockFragment>>();
+	protected ArrayList<ArrayList<ListItemInfo>> backStack = new ArrayList<ArrayList<ListItemInfo>>();
 
 	public Fragment getCurrentFragment() {
 		return this.currentFragment;
@@ -62,32 +60,35 @@ public class ListAdapter extends ArrayAdapter<String> implements
 
 	public void navigateUp() {
 		int backStackSize = this.backStack.get(this.getListItemIndex()).size();
-		if (backStackSize > 0) {
-			this.backStack.get(this.getListItemIndex()).remove(backStackSize - 1);
+		if (backStackSize > 1) {
+			this.backStack.get(this.getListItemIndex()).remove(
+					backStackSize - 1);
 			replaceFramgent(this.getListItemIndex(), false);
 		} else {
 			this.mContext.finish();
 		}
 	}
 
+	public void addFragmentBackStack(Class<? extends SherlockFragment> clss,
+			Bundle bundle) {
+		this.backStack.get(this.getListItemIndex()).add(
+				new ListItemInfo(clss, bundle));
+	}
+
 	public boolean replaceFramgent(int position, boolean addToStack) {
 		SherlockFragment fragment = null;
-		if (backStack.get(position).size() > 0) {
-			fragment = backStack.get(position).get(
-					backStack.get(position).size() - 1);
-		} else {
-			ListItemInfo info = infos.get(position);
-			try {
-				fragment = (SherlockFragment) info.clss.newInstance();
-				fragment.setArguments(info.info);
-				currentFragment = fragment;
-				backStack.get(position).add(fragment);
-			} catch (InstantiationException e) {
-				e.printStackTrace();
-			} catch (IllegalAccessException e) {
-				e.printStackTrace();
-			}
+		try {
+			int size = backStack.get(position).size();
+			ListItemInfo info = backStack.get(position).get(size - 1);
+			fragment = (SherlockFragment) info.clss.newInstance();
+			fragment.setArguments(info.info);
+			currentFragment = fragment;
+		} catch (InstantiationException e) {
+			e.printStackTrace();
+		} catch (IllegalAccessException e) {
+			e.printStackTrace();
 		}
+
 		if (fragment != null) {
 			FragmentTransaction fragmentTransaction = ((SherlockFragmentActivity) mContext)
 					.getSupportFragmentManager().beginTransaction();
@@ -103,21 +104,21 @@ public class ListAdapter extends ArrayAdapter<String> implements
 		return false;
 	}
 
-	public void changeListItem(int position, Class<?> clss, Bundle info) {
-		String item = this.getItem(position);
-		this.remove(item);
-		this.insert(item, position);
-		this.infos.set(position, new ListItemInfo(clss, info));
+	public void changeListItem(int position, int depth, Class<?> clss,
+			Bundle info) {
+		if (depth == 0) {
+			String item = this.getItem(position);
+			this.remove(item);
+			this.insert(item, position);
+		}
+		this.backStack.get(position).set(depth, new ListItemInfo(clss, info));
 	}
 
 	public void addListItem(String title, Class<?> clss, Bundle info) {
 		this.add(title);
-		this.infos.add(new ListItemInfo(clss, info));
-		this.backStack.add(new ArrayList<SherlockFragment>());
-	}
-
-	public static String getTag() {
-		return TAG;
+		ArrayList<ListItemInfo> list = new ArrayList<ListItemInfo>();
+		list.add(new ListItemInfo(clss, info));
+		this.backStack.add(list);
 	}
 
 	public void destroy() {
@@ -126,19 +127,13 @@ public class ListAdapter extends ArrayAdapter<String> implements
 
 	@Override
 	public void onPageScrollStateChanged(int arg0) {
-		// TODO Auto-generated method stub
-
 	}
 
 	@Override
 	public void onPageScrolled(int arg0, float arg1, int arg2) {
-		// TODO Auto-generated method stub
-
 	}
 
 	@Override
 	public void onPageSelected(int arg0) {
-		// TODO Auto-generated method stub
-
 	}
 }

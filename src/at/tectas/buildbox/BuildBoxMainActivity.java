@@ -8,13 +8,14 @@ import com.google.gson.JsonObject;
 
 import android.annotation.SuppressLint;
 import com.actionbarsherlock.app.ActionBar;
+import com.actionbarsherlock.app.SherlockFragment;
+
 import android.app.Dialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.NavUtils;
 import android.support.v4.view.ViewPager;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
@@ -133,8 +134,8 @@ public class BuildBoxMainActivity extends DownloadActivity {
 		}
 
 		if (this.adapter.getCount() == 0
-				|| this.adapter.getItem(
-						this.adapter.getCount() - 1).equals("Downloads")) {
+				|| this.adapter.getItem(this.adapter.getCount() - 1).equals(
+						"Downloads")) {
 			menu.getItem(0).setVisible(false);
 			menu.getItem(1).setVisible(false);
 			menu.getItem(2).setVisible(false);
@@ -287,7 +288,7 @@ public class BuildBoxMainActivity extends DownloadActivity {
 			Bundle bundle = this.contentItems.get(index).parseItemToBundle();
 			bundle.putInt("index", index);
 
-			this.adapter.changeListItem(index, ContentListFragment.class,
+			this.adapter.changeListItem(index, 0, ContentListFragment.class,
 					bundle);
 		}
 	}
@@ -353,4 +354,9 @@ public class BuildBoxMainActivity extends DownloadActivity {
 		}
 	}
 
+	@Override
+	public void afterFragmentChange(SherlockFragment fragment) {
+		this.adapter.addFragmentBackStack(fragment.getClass(),
+				fragment.getArguments());
+	}
 }
