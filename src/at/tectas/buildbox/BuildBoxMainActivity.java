@@ -113,6 +113,11 @@ public class BuildBoxMainActivity extends DownloadActivity {
 	}
 
 	@Override
+	public void onBackPressed() {
+		this.adapter.navigateUp();
+	};
+
+	@Override
 	public void startServiceDownload() {
 		if (this.downloadCallback == null) {
 			this.downloadCallback = new at.tectas.buildbox.communication.callbacks.BuildBoxDownloadCallback(
@@ -289,7 +294,7 @@ public class BuildBoxMainActivity extends DownloadActivity {
 			bundle.putInt("index", index);
 
 			this.adapter.changeListItem(index, 0, ContentListFragment.class,
-					bundle);
+					bundle, null);
 		}
 	}
 
@@ -356,7 +361,13 @@ public class BuildBoxMainActivity extends DownloadActivity {
 
 	@Override
 	public void afterFragmentChange(SherlockFragment fragment) {
-		this.adapter.addFragmentBackStack(fragment.getClass(),
-				fragment.getArguments());
+		if (fragment instanceof ContentListFragment) {
+			this.adapter.addFragmentBackStack(fragment.getClass(),
+					fragment.getArguments(),
+					((ContentListFragment) fragment).getListItems());
+		} else {
+			this.adapter.addFragmentBackStack(fragment.getClass(),
+					fragment.getArguments(), null);
+		}
 	}
 }

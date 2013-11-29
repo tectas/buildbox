@@ -9,6 +9,8 @@ import com.actionbarsherlock.app.SherlockFragmentActivity;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTransaction;
+import at.tectas.buildbox.library.content.items.Item;
+import at.tectas.buildbox.library.fragments.ContentListFragment;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
 import android.widget.ArrayAdapter;
@@ -43,10 +45,12 @@ public class ListAdapter extends ArrayAdapter<String> implements
 	public class ListItemInfo {
 		public Class<?> clss;
 		public Bundle info;
+		public ArrayList<Item> children;
 
-		public ListItemInfo(Class<?> clss, Bundle info) {
+		public ListItemInfo(Class<?> clss, Bundle info, ArrayList<Item> children) {
 			this.clss = clss;
 			this.info = info;
+			this.children = children;
 		}
 	}
 
@@ -54,7 +58,7 @@ public class ListAdapter extends ArrayAdapter<String> implements
 
 		@Override
 		public boolean onNavigationItemSelected(int itemPosition, long itemId) {
-			return replaceFramgent(itemPosition, true);
+			return replaceFragment(itemPosition);
 		}
 	}
 
@@ -63,24 +67,37 @@ public class ListAdapter extends ArrayAdapter<String> implements
 		if (backStackSize > 1) {
 			this.backStack.get(this.getListItemIndex()).remove(
 					backStackSize - 1);
-			replaceFramgent(this.getListItemIndex(), false);
+			replaceFragment(this.getListItemIndex());
 		} else {
 			this.mContext.finish();
 		}
 	}
 
 	public void addFragmentBackStack(Class<? extends SherlockFragment> clss,
-			Bundle bundle) {
+			Bundle bundle, ArrayList<Item> items) {
 		this.backStack.get(this.getListItemIndex()).add(
-				new ListItemInfo(clss, bundle));
+				new ListItemInfo(clss, bundle, items));
 	}
 
-	public boolean replaceFramgent(int position, boolean addToStack) {
+	public boolean replaceFragment(int position) {
 		SherlockFragment fragment = null;
 		try {
 			int size = backStack.get(position).size();
 			ListItemInfo info = backStack.get(position).get(size - 1);
+
+			if (info.info == null) {
+				info.info = new Bundle();
+			}
+			if (info.info.getInt("index", -1) == -1) {
+				info.info.putInt("index", this.listItemIndex);
+			}
+
 			fragment = (SherlockFragment) info.clss.newInstance();
+			
+			if (fragment instanceof ContentListFragment) {
+				((ContentListFragment)fragment).setListItems(info.children);
+			}
+			
 			fragment.setArguments(info.info);
 			currentFragment = fragment;
 		} catch (InstantiationException e) {
@@ -105,19 +122,19 @@ public class ListAdapter extends ArrayAdapter<String> implements
 	}
 
 	public void changeListItem(int position, int depth, Class<?> clss,
-			Bundle info) {
+			Bundle info, ArrayList<Item> items) {
 		if (depth == 0) {
 			String item = this.getItem(position);
 			this.remove(item);
 			this.insert(item, position);
 		}
-		this.backStack.get(position).set(depth, new ListItemInfo(clss, info));
+		this.backStack.get(position).set(depth, new ListItemInfo(clss, info, items));
 	}
 
 	public void addListItem(String title, Class<?> clss, Bundle info) {
 		this.add(title);
 		ArrayList<ListItemInfo> list = new ArrayList<ListItemInfo>();
-		list.add(new ListItemInfo(clss, info));
+		list.add(new ListItemInfo(clss, info, null));
 		this.backStack.add(list);
 	}
 
