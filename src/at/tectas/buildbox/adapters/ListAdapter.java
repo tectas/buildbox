@@ -15,7 +15,7 @@ import android.os.Bundle;
 import android.support.v4.view.ViewPager;
 import android.widget.ArrayAdapter;
 import at.tectas.buildbox.BuildBoxMainActivity;
-import at.tectas.buildbox.R;
+import at.tectas.buildbox.msteam.R;
 
 public class ListAdapter extends ArrayAdapter<String> implements
 		ViewPager.OnPageChangeListener {
